@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('LetterChat Sunucusu Aktif! 🚀 (v2 - Ringtone Support)');
+  res.send('LetterChat Sunucusu Aktif! 🚀 (v3 - GPS Support)');
 });
 
 app.post('/send-notification', async (req, res) => {
@@ -17,9 +17,22 @@ app.post('/send-notification', async (req, res) => {
     return res.status(400).send({ error: 'Token yok' });
   }
 
-  // 🔥 KONTROL: Bu bir arama bildirimi mi?
-  // Frontend tarafında (CallScreen.tsx) data içine { type: 'call' } koymuştuk.
   const isCall = data && data.type === 'call';
+  const isFindPhone = data && data.type === 'find_phone';
+
+  // 🔥 KANAL SEÇİMİ
+  let channelId = 'default';
+  let sound = 'default';
+
+  if (isCall) {
+      channelId = 'incoming_call';
+      sound = 'ringtone.mp3';
+  } 
+  
+  if (isFindPhone) {
+      channelId = 'incoming_call'; // Aramayla aynı kanalı kullan (Maksimum ses için)
+      sound = 'ringtone.mp3';
+  }
 
   const message = {
     to: token,
@@ -27,12 +40,9 @@ app.post('/send-notification', async (req, res) => {
     body: body,
     data: data || {},
     priority: 'high',
-    // 🔥 EĞER ARAMAYSA:
-    // 1. Kanal ID'sini 'incoming_call' yap (HomeScreen.tsx ile eşleşmeli)
-    // 2. Sesi 'ringtone.mp3' yap (iOS için önemli)
-    channelId: isCall ? 'incoming_call' : 'default',
-    sound: isCall ? 'ringtone.mp3' : 'default', 
-    _displayInForeground: true, // Uygulama açıkken de bildirim düşsün
+    channelId: channelId,
+    sound: sound,
+    _displayInForeground: true,
   };
 
   try {
@@ -47,7 +57,7 @@ app.post('/send-notification', async (req, res) => {
     });
 
     const result = await response.json();
-    console.log(`Bildirim Gönderildi (${isCall ? 'ARAMA' : 'MESAJ'}):`, result);
+    console.log(`Bildirim Gönderildi (${isFindPhone ? 'GPS' : isCall ? 'ARAMA' : 'MESAJ'}):`, result);
     res.status(200).send(result);
   } catch (error) {
     console.error("Hata:", error);
