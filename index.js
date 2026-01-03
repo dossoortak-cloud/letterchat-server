@@ -30,9 +30,8 @@ app.post('/send-notification', async (req, res) => {
   } 
   
   if (isFindPhone) {
-      // Telefon Bulma için AYRI bir kanal da yapabiliriz ama şimdilik ses değişimi yeterli
       channelId = 'incoming_call'; 
-      sound = 'alarm.mp3'; // 🔥 YENİ SES DOSYASI
+      sound = 'alarm.mp3'; // 🔥 YENİ: Cırtlak Alarm Sesi
   }
 
   const message = {
