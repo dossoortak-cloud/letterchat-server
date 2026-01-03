@@ -20,7 +20,7 @@ app.post('/send-notification', async (req, res) => {
   const isCall = data && data.type === 'call';
   const isFindPhone = data && data.type === 'find_phone';
 
-  // 🔥 KANAL VE SES SEÇİMİ
+  // 🔥 KANAL SEÇİMİ
   let channelId = 'default';
   let sound = 'default';
 
