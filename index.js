@@ -20,17 +20,19 @@ app.post('/send-notification', async (req, res) => {
   const isCall = data && data.type === 'call';
   const isFindPhone = data && data.type === 'find_phone';
 
-  // 🔥 KANAL SEÇİMİ
+  // 🔥 KANAL VE SES SEÇİMİ
   let channelId = 'default';
   let sound = 'default';
 
   if (isCall) {
+      // Normal aramalar için
       channelId = 'incoming_call';
       sound = 'ringtone.mp3';
   } 
   
   if (isFindPhone) {
-      channelId = 'find_phone_channel'; // 🔥 ARTIK ÖZEL KANAL KULLANIYOR
+      // Telefon Bulma için ÖZEL kanal (Cırtlak ses)
+      channelId = 'find_phone_channel'; 
       sound = 'alarm.mp3'; 
   }
 
