@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('LetterChat Sunucusu Aktif! 🚀 (v3 - GPS Support)');
+  res.send('LetterChat Sunucusu Aktif! 🚀 (v4 - Alarm Support)');
 });
 
 app.post('/send-notification', async (req, res) => {
@@ -20,7 +20,7 @@ app.post('/send-notification', async (req, res) => {
   const isCall = data && data.type === 'call';
   const isFindPhone = data && data.type === 'find_phone';
 
-  // 🔥 KANAL SEÇİMİ
+  // 🔥 KANAL VE SES SEÇİMİ
   let channelId = 'default';
   let sound = 'default';
 
@@ -30,8 +30,9 @@ app.post('/send-notification', async (req, res) => {
   } 
   
   if (isFindPhone) {
-      channelId = 'incoming_call'; // Aramayla aynı kanalı kullan (Maksimum ses için)
-      sound = 'ringtone.mp3';
+      // Telefon Bulma için AYRI bir kanal da yapabiliriz ama şimdilik ses değişimi yeterli
+      channelId = 'incoming_call'; 
+      sound = 'alarm.mp3'; // 🔥 YENİ SES DOSYASI
   }
 
   const message = {
@@ -57,7 +58,7 @@ app.post('/send-notification', async (req, res) => {
     });
 
     const result = await response.json();
-    console.log(`Bildirim Gönderildi (${isFindPhone ? 'GPS' : isCall ? 'ARAMA' : 'MESAJ'}):`, result);
+    console.log(`Bildirim Tipi: ${isFindPhone ? 'ALARM' : isCall ? 'ARAMA' : 'MESAJ'}`);
     res.status(200).send(result);
   } catch (error) {
     console.error("Hata:", error);
