@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('LetterChat Sunucusu Aktif! 🚀 (v4 - Alarm Support)');
+  res.send('LetterChat Sunucusu Aktif! 🚀 (v5 - Final Channels)');
 });
 
 app.post('/send-notification', async (req, res) => {
@@ -20,7 +20,7 @@ app.post('/send-notification', async (req, res) => {
   const isCall = data && data.type === 'call';
   const isFindPhone = data && data.type === 'find_phone';
 
-  // 🔥 KANAL VE SES SEÇİMİ
+  // 🔥 KANAL SEÇİMİ
   let channelId = 'default';
   let sound = 'default';
 
@@ -30,8 +30,8 @@ app.post('/send-notification', async (req, res) => {
   } 
   
   if (isFindPhone) {
-      channelId = 'incoming_call'; 
-      sound = 'alarm.mp3'; // 🔥 YENİ: Cırtlak Alarm Sesi
+      channelId = 'find_phone_channel'; // 🔥 ARTIK ÖZEL KANAL KULLANIYOR
+      sound = 'alarm.mp3'; 
   }
 
   const message = {
